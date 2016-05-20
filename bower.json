@@ -1,0 +1,25 @@
+{
+  "name": "socketio-angular",
+  "authors": [
+    "Emmanuel Telmon <etelmon@zimit.io>"
+  ],
+  "description": "This angular module allows an angular application access an api served by a socketio-auth based node application.",
+  "main": "socket/socket.module.js",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "socketio",
+    "auth",
+    "api"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
