@@ -4,7 +4,6 @@
     "Emmanuel Telmon <etelmon@zimit.io>"
   ],
   "description": "This angular module allows an angular application access an api served by a socketio-auth based node application.",
-  "main": "socket/socket.module.js",
   "moduleType": [
     "globals"
   ],
@@ -21,5 +20,14 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "angular": "~1.4.8"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.4.3"
+  },
+  "resolutions": {
+    "angular": "~1.4.8"
+  }
 }

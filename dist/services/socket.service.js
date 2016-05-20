@@ -17,7 +17,7 @@
  * 
  */
 angular
-    .module('socketio)
+    .module('socketio')
     .service('socketService', socketService);
 
 function socketService($rootScope, $location, $timeout, $q, $window, authService) {
@@ -82,20 +82,30 @@ function socketService($rootScope, $location, $timeout, $q, $window, authService
     }
 
     function socketEmit(operation, data) {
-        var deferred = $q.defer();
-        authService.connect().then(function (socket) {
-            // but what if we have not connection before the emit, it will queue call...not so good.
+
+        return authService.connect()
+            .then(onConnectionSuccess,onConnectionError)
+           ;// .catch(onConnectionError);
+
+        ////////////
+        function onConnectionSuccess(socket) {
+            // but what if we have not connection before the emit, it will queue call...not so good.        
+            var deferred = $q.defer();
             socket.emit('api', operation, data, function (result) {
                 if (result.code) {
                     console.debug('Error on ' + operation + ' ->' + JSON.stringify(result));
-                    deferred.reject({ code: result.code, description: result.data })
+                    deferred.reject({ code: result.code, description: result.data });
                 }
                 else {
                     deferred.resolve(result.data);
                 }
             });
-        });
-        return deferred.promise;
+            return deferred.promise;
+        }
+
+        function onConnectionError(err) {
+            return $q.reject({ code: 'CONNECTION_ERR', description: err });
+        }
     }
 }
 

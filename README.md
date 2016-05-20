@@ -1,0 +1,69 @@
+
+## Description
+This bower package provides the angular client to use the secured API running on a socketio.auth infrastructure based Express server.
+This client enables the following:
+- maintaining a secure/authenticated connection via websocket 
+- access to an api via websocket
+
+
+## Pre-requiste
+- Set up your socketio.auth based express server. Check socketio.auth git repository.
+- Use $http to contact the server login api and retrieve a token then store it in localStorage.token
+- define an api on the server (see socketio.auth and use socketIoAuth.apiRouter)
+
+## Usage
+- use socketService.fetch to get the data from your api
+ex
+socketService.fetch('member.findById',id)
+.then(function(data) {
+    // do something with your data returned from your api
+    })
+.catch(function(err) {
+    // do something with the err.code, err.description
+    })
+    
+
+## Installation
+
+```
+bower install "git://github.com/z-open/angular-socketio#commit-ish
+```
+
+
+## Example 
+```javascript
+```
+
+__Client side__:
+
+```javascript
+```
+__Server side__:
+```javascript
+```
+
+
+
+## Contribute
+
+You are always welcome to open an issue or provide a pull-request!
+
+Check out the unit tests.
+First download/extract or clone this git repository then...
+```bash
+npm install
+npm test
+```
+
+## Issue Reporting
+
+
+If you have found a bug or if you have a feature request, please report them at this repository issues section. Please do not report security vulnerabilities on the public GitHub issue tracker. 
+
+## Author
+
+[z-open]
+
+## License
+
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more info.
