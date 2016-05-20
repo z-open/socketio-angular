@@ -1,26 +1,15 @@
 
 /** 
- * This provider handles the handshake to authenticate a user and maintain a secure web socket connection via tokens.
- * It also provides service methods to communicate with the web socket server and set the login and logout url to participating in the authentication.
+ * This service allows your application contact the websocket api.
  * 
- * usage examples:
- * 
- * In the config of the app module:
- * socketServiceProvider.setLoginUrl('/access#/login');
-    socketServiceProvider.setLogoutUrl('/access#/login');
- *  
- * In the run of the app module:
- * socketService.connect()
- * 
- * In code controller, directive, service, etc..
- * sockectService.emit or sockectService.on 
+ * It will ensure that the connection is available and user is authenticated before fetching data.
  * 
  */
 angular
     .module('socketio')
     .service('socketService', socketService);
 
-function socketService($rootScope, $location, $timeout, $q, $window, authService) {
+function socketService($rootScope, $q, authService) {
 
     this.on = on;
     this.emit = emit;
@@ -30,7 +19,6 @@ function socketService($rootScope, $location, $timeout, $q, $window, authService
     this.notify = notify;
 
     ///////////////////
-
     function on(eventName, callback) {
         authService.connect().then(function (socket) {
             socket.on(eventName, function () {
@@ -41,7 +29,7 @@ function socketService($rootScope, $location, $timeout, $q, $window, authService
             });
         });
     }
-
+    // deprecated, use post/notify
     function emit(eventName, data, callback) {
         authService.connect().then(function (socket) {
             socket.emit(eventName, data, function () {
@@ -84,8 +72,8 @@ function socketService($rootScope, $location, $timeout, $q, $window, authService
     function socketEmit(operation, data) {
 
         return authService.connect()
-            .then(onConnectionSuccess,onConnectionError)
-           ;// .catch(onConnectionError);
+            .then(onConnectionSuccess, onConnectionError)
+            ;// .catch(onConnectionError);
 
         ////////////
         function onConnectionSuccess(socket) {
