@@ -21,7 +21,8 @@ module.exports = function (config) {
             // 'app/bower_components/angular-mocks/angular-mocks.js',    
             //'public/test/assets/socket.io/socket.io-1.3.5.js',
             'dist/socket.module.js',
-            'dist/**/*.*.js'
+            'dist/**/*.*.js',
+            'test/specs/*.*.js'
         ],
 
         // list of files to exclude
