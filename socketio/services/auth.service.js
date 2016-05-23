@@ -19,8 +19,8 @@
  * 
  */
 angular
-    .module('socketio')
-    .provider('authService', authService);
+    .module('socketio-auth')
+    .provider('$auth', authService);
 
 function authService() {
 

@@ -2,7 +2,7 @@ describe('Unit testing for socket,', function () {
     var mock, socketService;
     var $q, $timeout, $rootScope;
     var socketResponse, connectError;
-    beforeEach(module('socketio'));
+    beforeEach(module('socketio-auth'));
 
     //    beforeEach(inject(function(_$rootScope_, _$q_, _$timeout_) {
     //         $rootScope = _$rootScope_;
@@ -15,7 +15,7 @@ describe('Unit testing for socket,', function () {
 
         var socket = {
             emit: function (event, operation, data, callback) {
-                //console.log("emiting");
+                // console.log("emiting");
                 callback(socketResponse);
             }
         }
@@ -36,13 +36,13 @@ describe('Unit testing for socket,', function () {
 
         module(function ($provide) {
             // $provide.value('$window', mock);
-            $provide.value('authService', mockAuthService);
+            $provide.value('$auth', mockAuthService);
         });
 
 
 
         inject(function ($injector, _$rootScope_, _$q_, _$timeout_) {
-            socketService = $injector.get('socketService');
+            socketService = $injector.get('$socketio');
             $rootScope = _$rootScope_;
             $q = _$q_;
             $timeout = _$timeout_;

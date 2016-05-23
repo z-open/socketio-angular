@@ -52,9 +52,11 @@ Check out the unit tests.
 First download/extract or clone this git repository then...
 ```bash
 npm install
-npm test
+gulp
 ```
-
+Note:
+Gulp build: build this library for dev (with map) and prod (minify,uglify)
+gulp: build all and run continuous testing.
 ## Issue Reporting
 
 

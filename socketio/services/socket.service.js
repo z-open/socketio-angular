@@ -6,21 +6,21 @@
  * 
  */
 angular
-    .module('socketio')
-    .service('socketService', socketService);
+    .module('socketio-auth')
+    .service('$socketio', socketService);
 
-function socketService($rootScope, $q, authService) {
+function socketService($rootScope, $q, $auth) {
 
     this.on = on;
     this.emit = emit;
-    this.logout = authService.logout;
+    this.logout = $auth.logout;
     this.fetch = fetch;
     this.post = post;
     this.notify = notify;
 
     ///////////////////
     function on(eventName, callback) {
-        authService.connect().then(function (socket) {
+        $auth.connect().then(function (socket) {
             socket.on(eventName, function () {
                 var args = arguments;
                 $rootScope.$apply(function () {
@@ -31,7 +31,7 @@ function socketService($rootScope, $q, authService) {
     }
     // deprecated, use post/notify
     function emit(eventName, data, callback) {
-        authService.connect().then(function (socket) {
+        $auth.connect().then(function (socket) {
             socket.emit(eventName, data, function () {
                 var args = arguments;
                 $rootScope.$apply(function () {
@@ -71,7 +71,7 @@ function socketService($rootScope, $q, authService) {
 
     function socketEmit(operation, data) {
 
-        return authService.connect()
+        return $auth.connect()
             .then(onConnectionSuccess, onConnectionError)
             ;// .catch(onConnectionError);
 
