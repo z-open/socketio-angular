@@ -12,9 +12,9 @@ This client enables the following:
 - define an api on the server (see socketio.auth and use socketIoAuth.apiRouter)
 
 ## Usage
-- use socketService.fetch to get the data from your api
+- use $socketio.fetch to get the data from your api
 ex
-socketService.fetch('member.findById',id)
+$socketio.fetch('member.findById',id)
 .then(function(data) {
     // do something with your data returned from your api
     })
