@@ -14,6 +14,7 @@ This client enables the following:
 ## Usage
 - use $socketio.fetch to get the data from your api
 ex
+```javascript
 $socketio.fetch('member.findById',id)
 .then(function(data) {
     // do something with your data returned from your api
@@ -21,14 +22,14 @@ $socketio.fetch('member.findById',id)
 .catch(function(err) {
     // do something with the err.code, err.description
     })
-    
+```
 
 ## Installation
 
 ```
 bower install "git://github.com/z-open/angular-socketio#commit-ish
 ```
-
+Afterwards, the module to add to your angular application is named socketio-auth.
 
 ## Example 
 ```javascript
