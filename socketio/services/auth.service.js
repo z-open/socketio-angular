@@ -20,9 +20,9 @@
  */
 angular
     .module('socketio-auth')
-    .provider('$auth', authService);
+    .provider('$auth', authProvider);
 
-function authService() {
+function authProvider() {
 
     var loginUrl, logoutUrl, reconnectionMaxTime;
 
