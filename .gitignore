@@ -9,4 +9,5 @@ library/
 gulp-tsc*
 **/*.log
 *.log
+build/
 
