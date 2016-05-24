@@ -10,7 +10,7 @@
  * socketServiceProvider.setLoginUrl('/access#/login');
  * socketServiceProvider.setLogoutUrl('/access#/login');
  * socketServiceProvider.setReconnectionMaxTimeInSecs(15);
- * This defines how much time we can wait to establish a successul connection before rejecting the connection (socketService.connectIO) with a timeout
+ * This defines how much time we can wait to establish a successul connection before rejecting the connection (socketService.connectIO) with a timeout. by default, it will try for 15 seconds to get a connection and then give up
  *  
  * Before any socket use in your services or resolve blocks, connect() makes sure that we have an established authenticated connection by using the following:
  * socketService.connect().then(
@@ -24,7 +24,7 @@ angular
 
 function authProvider() {
 
-    var loginUrl, logoutUrl, reconnectionMaxTime;
+    var loginUrl, logoutUrl, reconnectionMaxTime = 15;
 
     this.setLoginUrl = function (value) {
         loginUrl = value;
@@ -112,7 +112,7 @@ function authProvider() {
             acceptableDelay = $timeout(function () {
                 off();
                 deferred.reject('TIMEOUT');
-            }, reconnectionMaxTime | 30000);
+            }, reconnectionMaxTime);
 
             return deferred.promise;
         }
