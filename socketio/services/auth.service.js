@@ -29,7 +29,7 @@ function authProvider() {
     this.setLoginUrl = function (value) {
         loginUrl = value;
     };
-    
+
     this.setLogoutUrl = function (value) {
         logoutUrl = value;
     };
@@ -72,7 +72,9 @@ function authProvider() {
 
         function logout() {
             // connection could be lost during logout..so it could mean we have not logout on server side.
-            socket.emit('logout', userToken);
+            if (socket) {
+                socket.emit('logout', userToken);
+            }
         }
 
         function getForValidConnection() {
@@ -110,7 +112,7 @@ function authProvider() {
             acceptableDelay = $timeout(function () {
                 off();
                 deferred.reject('TIMEOUT');
-            }, reconnectionMaxTime | 1000 * 60);
+            }, reconnectionMaxTime | 30000);
 
             return deferred.promise;
         }
@@ -133,7 +135,7 @@ function authProvider() {
                 .on('logged_out', onLogOut)
                 .on('disconnect', onDisconnect);
 
-            // TODO: this followowing event is still used.....
+            // TODO: this followowing event is still used.???....
             socket
                 .on('connect_error', function () {
                     setConnectionStatus(false);
@@ -167,7 +169,7 @@ function authProvider() {
             function onLogOut() {
                 clearTokenTimeout();
                 // token is no longer available.
-                localStorage.token = null;
+                delete localStorage.token;
                 setConnectionStatus(false);
                 redirect(logoutUrl || loginUrl);
             }

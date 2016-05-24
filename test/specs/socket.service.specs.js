@@ -4,14 +4,7 @@ describe('Unit testing for socket,', function () {
     var socketResponse, connectError;
     beforeEach(module('socketio-auth'));
 
-    //    beforeEach(inject(function(_$rootScope_, _$q_, _$timeout_) {
-    //         $rootScope = _$rootScope_;
-    //         $q = _$q_;
-    //         $timeout = _$timeout_;
-    //     }));
-
     beforeEach(function () {
-        //mock = { alert: jasmine.createSpy() };
 
         var socket = {
             emit: function (event, operation, data, callback) {
@@ -39,8 +32,6 @@ describe('Unit testing for socket,', function () {
             $provide.value('$auth', mockAuthService);
         });
 
-
-
         inject(function ($injector, _$rootScope_, _$q_, _$timeout_) {
             socketService = $injector.get('$socketio');
             $rootScope = _$rootScope_;
@@ -49,6 +40,8 @@ describe('Unit testing for socket,', function () {
 
         });
     });
+    
+    
     describe('Fetch', function () {
 
         it('should return the data ', function (done) {
