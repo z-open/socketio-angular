@@ -7,9 +7,9 @@
  */
 angular
     .module('socketio-auth')
-    .service('$socketio', socketService);
+    .service('$socketio', socketioService);
 
-function socketService($rootScope, $q, $auth) {
+function socketioService($rootScope, $q, $auth) {
 
     this.on = on;
     this.emit = emit;
@@ -62,11 +62,39 @@ function socketService($rootScope, $q, $auth) {
     }
 
     /**
-     * post will handle later on, duplicate record by providing a stamp.
+     * post sends data to the server.
+     * if data was already submitted, it would just return - which could happen when handling disconnection.
+     * 
+     * Note:
+     *  the code also handles versioning on any posted data
+        Ali and Emmanuel decided not to use this solution for now. but I(emmanuel) am not removing the code yet. It does add a version to an object.
      */
     function post(operation, data) {
         console.debug('Posting ' + operation + '...');
+        
+        if (!data.version) {
+            data.version = -1;
+        } else if (data.version>0) {
+            // if positive means we have not increase the version yet
+            data.version = -data.version-1;
+        }
         return socketEmit(operation, data)
+        .then(function(response){
+            // if success, version is back to positive
+            data.version = Math.abs(data.version) ; 
+            // the response should have the version too...
+            return response;                
+        })
+        .catch(function(err){
+            // if backend has already received this version from this user (token)...
+            if(err.code=='ALREADY_SUBMITTED') {
+                data.version = Math.abs(data.version) ; 
+                return $q.resolve(data);
+            }  else {
+                return $q.reject(err);
+            }
+            
+        })
     }
 
     function socketEmit(operation, data) {
