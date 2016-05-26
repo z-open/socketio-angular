@@ -98,6 +98,10 @@ function authProvider() {
             if (sessionUser.connected) {
                 deferred.resolve(socket);
             }
+            //@TODO TO THINK ABOUT:, if the socket is connecting already, means that a connect was called already by another async call, so just wait for user_connected
+            
+            
+            
             // if the response does not come quick..let's give up so we don't get stuck waiting
             // @TODO:other way is to watch for a connection error...
             var acceptableDelay;
