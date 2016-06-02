@@ -71,30 +71,36 @@ function socketioService($rootScope, $q, $auth) {
      */
     function post(operation, data) {
         console.debug('Posting ' + operation + '...');
-        
+
+
+        // we do not manage versioning on string, number, date (TODO use lodash)
+        if (typeof data === 'string' || data instanceof String ||  data instanceof Date || typeof data === 'number' || typeof data === 'boolean') {
+            return socketEmit(operation, data);
+        }
+
         if (!data.version) {
             data.version = -1;
-        } else if (data.version>0) {
+        } else if (data.version > 0) {
             // if positive means we have not increase the version yet
-            data.version = -data.version-1;
+            data.version = -data.version - 1;
         }
         return socketEmit(operation, data)
-        .then(function(response){
-            // if success, version is back to positive
-            data.version = Math.abs(data.version) ; 
-            // the response should have the version too...
-            return response;                
-        })
-        .catch(function(err){
-            // if backend has already received this version from this user (token)...
-            if(err.code=='ALREADY_SUBMITTED') {
-                data.version = Math.abs(data.version) ; 
-                return $q.resolve(data);
-            }  else {
-                return $q.reject(err);
-            }
-            
-        })
+            .then(function (response) {
+                // if success, version is back to positive
+                data.version = Math.abs(data.version);
+                // the response should have the version too...
+                return response;
+            })
+            .catch(function (err) {
+                // if backend has already received this version from this user (token)...
+                if (err.code == 'ALREADY_SUBMITTED') {
+                    data.version = Math.abs(data.version);
+                    return $q.resolve(data);
+                } else {
+                    return $q.reject(err);
+                }
+
+            })
     }
 
     function socketEmit(operation, data) {
