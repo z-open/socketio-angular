@@ -2,7 +2,9 @@ describe('Unit testing for socket,', function () {
     var mock, socketService;
     var $q, $timeout, $rootScope;
     var socketResponse, connectError;
-    beforeEach(module('socketio-auth'));
+    beforeEach(module('socketio-auth', function ($socketioProvider) {
+        $socketioProvider.setDebug(true);
+    }));
 
     beforeEach(function () {
 
@@ -40,8 +42,8 @@ describe('Unit testing for socket,', function () {
 
         });
     });
-    
-    
+
+
     describe('Fetch', function () {
 
         it('should return the data ', function (done) {

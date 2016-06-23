@@ -1,6 +1,6 @@
 
 describe('Unit testing for auth,', function () {
-    var mock, $auth, socket;
+    var mock, $auth, socket, sessionUser;
     var $q, $timeout, $rootScope;
 
 
@@ -9,18 +9,20 @@ describe('Unit testing for auth,', function () {
     var refreshedToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjIzMDkzNTJlLWM2OWItNDE4ZC04NTJiLTJiMTNkOGJiYjhhYiIsImRpc3BsYXkiOiJ0ZXN0MSIsImZpcnN0TmFtZSI6InRlc3QxIiwibGFzdE5hbWUiOiJ0ZXN0bDEiLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE0NjQxMDM5ODEsImV4cCI6MTQ2NDEwNDI4MiwianRpIjoxLCJkdXIiOjMwMH0.TIiSzCth7ed7tZFyt5lpqLrYtkNQzsscB9Yv0hlvjEQ";
 
 
-    beforeEach(module('socketio-auth'));
+    beforeEach(module('socketio-auth',function($authProvider){
+        $authProvider.setDebug(true);
+    }));
 
     beforeEach(function () {
       
         mockSocket();
         mockIo();
         
-        
         spyOn(window.location,'replace'); 
 
         inject(function ($injector, _$rootScope_, _$q_, _$timeout_) {
             $auth = $injector.get('$auth');
+            sessionUser = $injector.get('sessionUser');
             $rootScope = _$rootScope_;
             $q = _$q_;
             $timeout = _$timeout_;
@@ -40,7 +42,7 @@ describe('Unit testing for auth,', function () {
             localStorage.token = "vvvv";
             $auth.connect().finally(function () {
                 expect(localStorage.token).toEqual(refreshedToken);
-                expect($rootScope.sessionUser.display).toEqual(refreshTokenUser.display);
+                expect(sessionUser.display).toEqual(refreshTokenUser.display);
                 done();
             });
 
@@ -131,7 +133,7 @@ describe('Unit testing for auth,', function () {
         socket = {
             emit: null,
             on: function (event, fn) {
-                // console.log("on: " + event);
+               // console.log("on: " + event);
                 socketListeners[event] = fn;
                 return socket;
             }

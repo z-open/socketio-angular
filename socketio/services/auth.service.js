@@ -20,11 +20,19 @@
  */
 angular
     .module('socketio-auth')
+    // convenient service returning sessionUser
+    .factory('sessionUser', function ($auth) {
+        return $auth.getSessionUser();
+    })
     .provider('$auth', authProvider);
 
 function authProvider() {
 
-    var loginUrl, logoutUrl, reconnectionMaxTime = 15;
+    var loginUrl, logoutUrl, debug, reconnectionMaxTime = 15;
+
+    this.setDebug = function (value) {
+        debug = value;
+    };
 
     this.setLoginUrl = function (value) {
         loginUrl = value;
@@ -42,8 +50,7 @@ function authProvider() {
 
         var socket;
         var userToken = retrieveToken();
-        var sessionUser = {};
-        $rootScope.sessionUser = sessionUser;
+        var sessionUser = { connected: false };
 
         if (!userToken) {
             // @TODO: this right way to redirect if we have no token when we refresh or hit the app.
@@ -55,10 +62,18 @@ function authProvider() {
         }
         return {
             connect: connect,
-            logout: logout
+            logout: logout,
+            getSessionUser: getSessionUser
         };
 
+
         ///////////////////
+
+        function getSessionUser() {
+            // the object will have the user information when the connection is established. Otherwise its connection property will be false; 
+            return sessionUser;
+        }
+
         /**
          * returns a promise 
          * the success function receives the socket as a parameter
@@ -99,9 +114,9 @@ function authProvider() {
                 deferred.resolve(socket);
             }
             //@TODO TO THINK ABOUT:, if the socket is connecting already, means that a connect was called already by another async call, so just wait for user_connected
-            
-            
-            
+
+
+
             // if the response does not come quick..let's give up so we don't get stuck waiting
             // @TODO:other way is to watch for a connection error...
             var acceptableDelay;
@@ -154,20 +169,21 @@ function authProvider() {
             }
 
             function onDisconnect() {
-                console.debug('Session disconnected');
+                if (debug) { console.debug('Session disconnected'); }
                 setConnectionStatus(false);
+                $rootScope.$broadcast('user_disconnected');
             }
 
             function onAuthenticated(refreshToken) {
                 clearTokenTimeout();
                 // the server confirmed that the token is valid...we are good to go
-                console.debug('authenticated, received new token: ' + (refreshToken != userToken));
+                if (debug) { console.debug('authenticated, received new token: ' + (refreshToken != userToken)); }
                 localStorage.token = refreshToken;
                 userToken = refreshToken;
                 setLoginUser(userToken);
                 setConnectionStatus(true);
                 requestNewTokenBeforeExpiration(userToken);
-                $rootScope.$broadcast('user_connected');
+                $rootScope.$broadcast('user_connected',sessionUser);
             }
 
             function onLogOut() {
@@ -180,7 +196,7 @@ function authProvider() {
 
             function onUnauthorized(msg) {
                 clearTokenTimeout();
-                console.debug('unauthorized: ' + JSON.stringify(msg.data));
+                if (debug) { console.debug('unauthorized: ' + JSON.stringify(msg.data)); }
                 setConnectionStatus(false);
                 redirect(loginUrl);
             }
@@ -197,6 +213,7 @@ function authProvider() {
                 sessionUser.firstName = payload.firstName;
                 sessionUser.lastName = payload.lastName;
                 sessionUser.role = payload.role;
+                sessionUser.profile = payload.profile;
             }
 
             function clearTokenTimeout() {
@@ -219,9 +236,9 @@ function authProvider() {
                 var initial = payload.dur;
 
                 var duration = (initial * 90 / 100) | 0;
-                console.debug('Schedule to request a new token in ' + duration + ' seconds (token duration:' + initial + ')');
+                if (debug) { console.debug('Schedule to request a new token in ' + duration + ' seconds (token duration:' + initial + ')'); }
                 tokenValidityTimeout = $timeout(function () {
-                    console.debug('Time to request new token ' + initial);
+                    if (debug) { console.debug('Time to request new token ' + initial); }
                     socket.emit('authenticate', { token: token });
                     // Note: If communication crashes right after we emitted and when servers is sending back the token,
                     // when the client reestablishes the connection, we would have to login because the previous token would be invalidated.
@@ -232,11 +249,11 @@ function authProvider() {
         function retrieveToken() {
             var userToken = $location.search().token;
             if (userToken) {
-                console.debug('Using token passed during redirection: ' + userToken);
+                if (debug) { console.debug('Using token passed during redirection: ' + userToken); }
             } else {
                 userToken = localStorage.token;
                 if (userToken) {
-                    console.debug('Using Token in local storage: ' + userToken);
+                    if (debug) { console.debug('Using Token in local storage: ' + userToken); }
                 } else {
 
                 }

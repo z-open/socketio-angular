@@ -13,7 +13,14 @@ This client enables the following:
 
 ## Usage
 - use $socketio.fetch to get the data from your api
-ex
+- use the service sessionUser to get the current user. unless you get its connection property set to false. 
+The sessionUser object will contain the following properties: id, lastName, firstName, display, role and profile. In addition, Anything else within the socket paypload.profile will be available in sessionUser.profile. 
+
+Events:
+user_connected and user_disconnected events are broadcasted on connection status change.
+
+
+ex:
 ```javascript
 $socketio.fetch('member.findById',id)
 .then(function(data) {
