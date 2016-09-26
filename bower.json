@@ -1,5 +1,6 @@
 {
   "name": "angular-socketio",
+  "version": "1.4.0",
   "authors": [
     "Emmanuel Telmon <etelmon@zimit.io>"
   ],
