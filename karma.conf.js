@@ -16,6 +16,9 @@ module.exports = function (config) {
 
         // list of files / patterns to load in the browser
         files: [
+            // currently necessary to make phantomjs with angular 1.5
+            './node_modules/phantomjs-polyfill/bind-polyfill.js',
+
             'libraries/angular/angular.js',
             'libraries/angular-mocks/angular-mocks.js',
             // 'app/bower_components/angular-mocks/angular-mocks.js',    
