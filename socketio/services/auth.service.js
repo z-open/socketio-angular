@@ -208,13 +208,7 @@ function authProvider() {
 
             function setLoginUser(token) {
                 var payload = decode(token);
-                sessionUser.id = payload.id;
-                sessionUser.display = payload.display;
-                sessionUser.firstName = payload.firstName;
-                sessionUser.lastName = payload.lastName;
-                sessionUser.role = payload.role;
-                sessionUser.profile = payload.profile;
-                sessionUser.orgId = payload.orgId;
+                return _.assign(sessionUser,payload);
             }
 
             function clearTokenTimeout() {

@@ -18,7 +18,7 @@ module.exports = function (config) {
         files: [
             // currently necessary to make phantomjs with angular 1.5
             './node_modules/phantomjs-polyfill/bind-polyfill.js',
-
+            'libraries/lodash/dist/lodash.js',
             'libraries/angular/angular.js',
             'libraries/angular-mocks/angular-mocks.js',
             // 'app/bower_components/angular-mocks/angular-mocks.js',    
