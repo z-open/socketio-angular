@@ -222,6 +222,7 @@ function authProvider() {
                 sessionUser.lastName = payload.lastName;
                 sessionUser.role = payload.role;
                 sessionUser.profile = payload.profile;
+                sessionUser.orgId = payload.orgId;
             }
 
             function clearTokenTimeout() {
